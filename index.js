@@ -13,16 +13,20 @@ try {
     console.log("nofile exist");
 }
 const data=d?JSON.parse(d):[];
-console.log(data);
 if(username==="")
 {
     console.log("invalid username");
 }
 else 
 {
-    Promise.resolve(fetchdata({username:username}));
+   const t=await fetchdata({username:username}).then((d1)=>{return d});
+   readuseractivity({data:t});
 }
-
+function readuseractivity({data})
+{   console.log(data[0])
+    const s=data.length;
+    console.log(s);
+}
 async function fetchdata({username})
 {
     const uac=data.filter((d)=>{return d.actor.login===username})
@@ -37,8 +41,12 @@ async function fetchdata({username})
      }
       data.push(...c);
       fs.writeFileSync(p,JSON.stringify(data),"utf8");
-      console.log("ok");
+      console.log("ok1")
+      return c;
     }
-    else console.log(uac,"ok1");
+    else 
+    {   console.log("ok2")
+        return Promise.resolve(uac);
+    }
 }
 
