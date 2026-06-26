@@ -4,7 +4,6 @@ import * as fs from "node:fs";
 const p=path.join(import.meta.dirname,"./activity.json");
 const a=process.argv.slice(2);
 const username=a[0]||"";
-console.log(username)
 try {
     var d=fs.readFileSync(p,"utf8");
 } catch (error) {
@@ -19,13 +18,15 @@ if(username==="")
 }
 else 
 {
-   const t=await fetchdata({username:username}).then((d1)=>{return d});
+   const t=await fetchdata({username:username});
    readuseractivity({data:t});
 }
 function readuseractivity({data})
-{   console.log(data[0])
-    const s=data.length;
-    console.log(s);
+{  console.log("Recent activity-")
+    for(const i of data)
+    {
+        console.log(i.type,"->",i.repo.name);
+    }
 }
 async function fetchdata({username})
 {
@@ -37,16 +38,15 @@ async function fetchdata({username})
         var c=await n.json();
      } catch (error) {
         console.log("github api is down");
-        var c={};
+        var c=[];
      }
       data.push(...c);
       fs.writeFileSync(p,JSON.stringify(data),"utf8");
-      console.log("ok1")
       return c;
     }
     else 
-    {   console.log("ok2")
-        return Promise.resolve(uac);
+    {   
+        return uac;
     }
 }
 
